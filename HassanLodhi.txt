@@ -1,0 +1,25 @@
+]#!/bin/bash
+
+#The user for the directory path to be monitored
+read -p "Enter the directory path to be monitored: " dir_path
+
+#The user for the regular expression pattern to match the file names to be monitored
+while true; do
+    read -p "Enter a regular expression pattern to match the file names to be monitored: " file_pattern
+    if [[ -z "$file_pattern" ]]; then
+        echo "Error: pattern cannot be empty."
+    else
+        if [[ "$file_pattern" =~ ^[[:alnum:]\*\.\[\]\(\)\{\}\|]+$ ]]; then
+            break
+        else
+            echo "Error: invalid pattern. The pattern should only contain alphanumeric characters, '*', '.', '[', ']', >        fi
+    fi
+done
+
+# Define the function to be called whenever a file change is detected
+function handle_file_change {
+    local file_path="$1"
+    local file_name="$(basename "$file_path")"
+    echo "File change detected: $file_name"
+    if grep -q "error" "$file_path"; then
+        local backup_dir="./backup"
